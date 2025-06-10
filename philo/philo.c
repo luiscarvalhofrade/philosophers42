@@ -6,7 +6,18 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 00:13:03 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/10 09:58:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "philo.h"
+
+int	main(int argc, char **argv)
+{
+	if (argc < 5 && argc > 6)
+	{
+		printf("ERROR imput");
+		return (1);
+	}
+	return (0);
+}

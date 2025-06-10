@@ -6,7 +6,15 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/04 00:13:07 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/10 09:58:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef PHILO_H
+# define PHILO_PH
+
+# include <pthread.h>
+# include <stdio.h>
+
+
+#endif
