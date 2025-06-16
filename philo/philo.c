@@ -6,16 +6,70 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/12 21:10:20 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:47:03 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
-int	moonitor()
+int	monitor()
 {
 
+}
+
+int	routine()
+{
+
+}
+
+int	init(int *table_infos)
+{
+	t_table	*table;
+	int		i;
+
+	table = malloc(sizeof(t_table));
+	if (!table)
+		return (NULL);
+	if (init_table(&table, table_infos) != 0)
+		return (NULL);
+	table->philos = malloc(sizeof(t_philo) * table_infos[0]);
+	if (!table->philos)
+	{
+		while (i-- > 0)
+		free(table->forks);
+		error_exit(table, "Malloc failed (philos)\n");
+	}
+	if (init_philos(&table) != 0)
+		return (NULL);
+	return (0);
+}
+
+int	init_table(t_table *table, int *table_infos)
+{
+	table->num_forks = table_infos[0];
+	table->num_philos = table_infos[0];
+	table->time_die = table_infos[1];
+	table->time_eat = table_infos[2];
+	table->time_sleep = table_infos[3];
+	table->start_simulation = get_time();
+	if (table_infos[4] != 0)
+		table->num_meals = table_infos[4];
+	return (0);
+}
+
+int init_philos(t_table *table)
+{
+	int	i;
+	t_philo	*philo;
+
+	i = 0;
+	while (table->num_philos > i)
+	{
+		philo = malloc(sizeof(t_philo));
+		if (!philo)
+			return (NULL);
+	}
+	return (0);
 }
 
 int	run_simulation(void)
