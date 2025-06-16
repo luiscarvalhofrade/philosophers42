@@ -27,19 +27,18 @@
 
 ## Dynamic
 
-	the first philo gets his forks, automatically the second one is locked, and the third, if we have the a even number of forks, also is allowed to get the third 
-	and the fourth forks and so on and on.
+the first philo gets his forks, automatically the second one is locked, and the third, if we have the a even number of forks, also is allowed to get the third 
+and the fourth forks and so on and on.
 
-	so here we found a new point: if the total number of philos is even, half of philos eat and the other half dont and if we have a odd number, we have (half - 1)
-	philos eating and the other (half + 1)philos doing other things.
+so here we found a new point: if the total number of philos is even, half of philos eat and the other half dont and if we have a odd number, we have (half - 1)
+philos eating and the other (half + 1)philos doing other things.
 
-	special case: 1 philo.
+special case: 1 philo.
 
-	Imagining that a philo needs 100 miliseconds to eat, 100 miliseconds to sleep and
-	100 miliseconds to die, what happens when we have a even and odd number?
+Imagining that a philo needs 100 miliseconds to eat, 100 miliseconds to sleep and
+100 miliseconds to die, what happens when we have a even and odd number?
 
-	other point, we dont have specified the amount of time of thinking, so it is the difference among eating, sleeping and the next time eating, or if the elapsed time of sleeping + thinking is higher of the amount to die.
+other point, we dont have specified the amount of time of thinking, so it is the difference among eating, sleeping and the next time eating, or if the elapsed time of sleeping + thinking is higher of the amount to die.
 
 ## the table
 
-	
