@@ -6,11 +6,19 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/16 16:47:03 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/16 17:42:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+
+/*
+	first, i need to imagine how to make the dyanmic between philosophers, each one
+	is the first when he gets the first and the second fork and so on. Second, how
+	to deal with the others philos, if anyother is set whatsoever.
+
+*/
 
 int	monitor()
 {
