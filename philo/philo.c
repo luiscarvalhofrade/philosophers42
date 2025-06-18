@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 12:15:34 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 13:46:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	init_table(t_table *table)
 	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		return (1);
-	while (++i <= table->num_forks)
+	while (++i <= table->num_philos)
 	{
 		pthread_mutex_init(&table->forks[i].fork, NULL);
 		table->forks[i].id = i;
@@ -52,51 +52,86 @@ int	init_table(t_table *table)
 	return (0);
 }
 
-void	*eat(void* arg)
+void	*eat(t_table *table)
 {
-	static int	meal_num;
+	t_philo	*philo;
+	int		i;
+	i = 0;
 
-	meal_num = 0;
-	pthread_mutex_lock(&fork1);
-	pthread_mutex_lock(&fork2);
-	meal_num++;
-    printf("eating... %d philo: %s\n", meal_num, (char *)arg);
-    pthread_mutex_unlock(&fork1);
-	pthread_mutex_unlock(&fork2);
+	while (i < 8)
+	{
+		philo = &table->philos[i];
+		pthread_mutex_lock(philo->left_fork);
+		pthread_mutex_lock(philo->right_fork);
+		philo->num_meals++;
+		printf("eating... %d philo: %s\n", philo->num_meals, philo->id);
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
+		i++;
+	}
+	return (0);
+}
+
+int	run_simulation(t_table *table)
+{
+	t_philo	philo;
+	int		i;
+
+	i = 0;
+	while (i < table->num_philos)
+	{
+		philo = table->philos[i];
+		pthread_create(&philo, NULL, eat, (t_table *)table);
+		i++;
+	}
+	return (0);
+}
+
+int	destroy_mutex(t_table *table)
+{
+	int		i;
+	t_fork	fork;
+
+	i = 0;
+	while (i < table->num_philos)
+	{
+		fork = table->forks[i];
+		pthread_mutex_destroy(&fork);
+		i++;
+	}
+	return (0);
+}
+
+int	join_threads(t_table *table)
+{
+	t_philo	*philo;
+	int		i;
+
+	i = 0;
+	while (i < table->num_philos)
+	{
+		philo = &table->philos[i];
+		pthread_join(&philo->thread, NULL);
+		i++;
+	}
 	return (0);
 }
 
 int	main(void)
 {
-	// all philos as threads
-	pthread_t philo1;
-	pthread_t philo2;
-	pthread_t philo3;
-	pthread_t philo4;
+	t_table	*table;
 
-	// Initialize the mutex
-	pthread_mutex_init(&fork1, NULL);
-	pthread_mutex_init(&fork2, NULL);
-	pthread_mutex_init(&fork3, NULL);
-	pthread_mutex_init(&fork4, NULL);
-
+	// init table, forks, philos
+	if (init_table(&table) != 0)
+		return (1);
 	// creating threads
-	pthread_create(&philo1, NULL, eat, "philo1");
-	pthread_create(&philo2, NULL, eat, "philo2");
-	pthread_create(&philo3, NULL, eat, "philo3");
-	pthread_create(&philo4, NULL, eat, "philo4");
-
+	if (run_simulation(table) != 0)
+		return (1);
 	// join the threads
-	pthread_join(philo1, NULL);
-	pthread_join(philo2, NULL);
-	pthread_join(philo3, NULL);
-	pthread_join(philo4, NULL);
-
+	if (join_threads(table) != 0)
+		return (1);
 	// Destroy the mutex
-	pthread_mutex_destroy(&fork1);
-	pthread_mutex_destroy(&fork2);
-	pthread_mutex_destroy(&fork3);
-	pthread_mutex_destroy(&fork4);
-
+	if (destroy_mutex(&table) != 0)
+		return (1);
 	return (0);
 }
