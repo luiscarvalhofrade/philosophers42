@@ -6,17 +6,51 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/17 21:15:43 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:15:34 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// all forks as mutexes
-pthread_mutex_t fork1;
-pthread_mutex_t fork2;
-pthread_mutex_t fork3;
-pthread_mutex_t fork4;
+int	init_philos(t_table *table)
+{
+	int		i;
+	t_philo	*philo;
+
+	i = 0;
+	while (i < table->num_philos)
+	{
+		philo = &table->philos[i];
+		philo->id = i;
+		philo->num_meals = 0;
+		philo->left_fork = &table->forks[i];
+		philo->right_fork = &table->forks[(i + 1) % table->num_philos];
+		philo->table = table;
+		philo->last_meal = table->start_simulation;
+		i++;
+	}
+	return (0);
+}
+
+int	init_table(t_table *table)
+{
+	int		i;
+
+	i = -1;
+	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
+	if (!table->forks)
+		return (1);
+	while (++i <= table->num_forks)
+	{
+		pthread_mutex_init(&table->forks[i].fork, NULL);
+		table->forks[i].id = i;
+	}
+	table->philos = (t_philo *)malloc(sizeof(t_philo) * table->num_philos);
+	if (!table->philos)
+		return (1);
+	init_philos(table);
+	return (0);
+}
 
 void	*eat(void* arg)
 {

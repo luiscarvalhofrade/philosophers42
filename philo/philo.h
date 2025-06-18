@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/17 20:30:41 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:13:50 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,18 @@
 
 typedef struct  s_fork
 {
-    int num_fork;
+    int             id;
+    pthread_mutex_t fork;
 }               t_fork;
 
 typedef struct  s_philo
 {
-    int start_routine;
-    int right_fork;
-    int left_fork;
-    int philo_num;
+    int     id;
+    int     num_meals;
+    int     last_meal;
+    t_table *table;
+    t_fork  *right_fork;
+    t_fork  *left_fork;
 }               t_philo;
 
 typedef struct  s_table
