@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 14:09:35 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 14:44:27 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int	init_table(char **argv, t_table *table)
 	int		i;
 
 	i = -1;
-	table->num_philos = ft_atoi(argv[0]);
-	table->start_simulation = gettimeofday();
+	table->num_philos = atoi(argv[1]);
+	//table->start_simulation = gettimeofday();
 	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		return (1);
@@ -54,15 +54,17 @@ int	init_table(char **argv, t_table *table)
 	return (0);
 }
 
-void	*eat(t_table *table)
+void	*eat(void *table)
 {
 	t_philo	*philo;
+	t_table *t;
 	int		i;
-	i = 0;
 
-	while (i < 8)
+	i = 0;	
+	t = (t_table *)table;
+	while (i < t->num_philos)
 	{
-		philo = &table->philos[i];
+		philo = &t->philos[i];
 		pthread_mutex_lock(&philo->left_fork->mutex);
 		pthread_mutex_lock(&philo->right_fork->mutex);
 		philo->num_meals++;
@@ -119,11 +121,31 @@ int	join_threads(t_table *table)
 	return (0);
 }
 
-int	main(void)
+int	validate_argv(char **argv)
+{
+	if (atoi(argv[1]) == 0)
+		return (1);
+	if (atoi(argv[2]) == 0)
+		return (1);
+	if (atoi(argv[3]) == 0)
+		return (1);
+	if (atoi(argv[4]) == 0)
+		return (1);
+	if (atoi(argv[5]) == 0)
+		return (1);
+	return (0);
+}
+
+int	main(int argc, char **argv)
 {
 	t_table	*table;
-	char **argv = {"7", NULL};
-
+	
+	//validate if we have the right number of params
+	if (argc < 5 || argc > 6)
+		return (1);
+	// validate if all params are integers
+	if (validate_argv(argv) != 0)
+		return (1);
 	// init table, forks, philos
 	if (init_table(argv, table) != 0)
 		return (1);
