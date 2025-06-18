@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 16:20:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:00:42 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ int	init_table(char **argv, t_table *table)
 	i = 0;
 	table->num_philos = atoi(argv[1]);
 	//table->start_simulation = gettimeofday();
+	table->time_die = atoi(argv[2]);
+	table->time_eat = atoi(argv[3]);
+	table->time_sleep = atoi(argv[4]);
 	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		return (1);
@@ -55,25 +58,32 @@ int	init_table(char **argv, t_table *table)
 	return (0);
 }
 
-void	*eat(void *philo)
+void	eat(t_philo *philo)
 {
-	t_philo	*p;
-
-	p = (t_philo *)philo;
-	if (p->id % 2 == 0)
+	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_lock(&p->left_fork->mutex);
-		pthread_mutex_lock(&p->right_fork->mutex);
+		pthread_mutex_lock(&philo->left_fork->mutex);
+		pthread_mutex_lock(&philo->right_fork->mutex);
 	}
 	else
 	{
-		pthread_mutex_lock(&p->right_fork->mutex);
-		pthread_mutex_lock(&p->left_fork->mutex);
+		pthread_mutex_lock(&philo->right_fork->mutex);
+		pthread_mutex_lock(&philo->left_fork->mutex);
 	}
-	p->num_meals++;
-	printf("eating... %d philo: %d\n", p->num_meals, p->id);
-	pthread_mutex_unlock(&p->left_fork->mutex);
-	pthread_mutex_unlock(&p->right_fork->mutex);
+	usleep(philo->table->time_eat * 1000);
+	philo->num_meals++;
+	printf("timestamp_in_ms %d is eating\n", philo->id);
+	pthread_mutex_unlock(&philo->left_fork->mutex);
+	pthread_mutex_unlock(&philo->right_fork->mutex);
+	return ;
+}
+
+void	*routine(void *arg)
+{
+	t_philo	*p;
+
+	p = (t_philo *)arg;
+	eat(p);
 	return (0);
 }
 
@@ -86,7 +96,7 @@ int	run_simulation(t_table *table)
 	while (i < table->num_philos)
 	{
 		philo = &table->philos[i];
-		pthread_create(&philo->thread, NULL, eat, (void *)philo);
+		pthread_create(&philo->thread, NULL, routine, (void *)philo);
 		i++;
 	}
 	return (0);
