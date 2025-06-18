@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 17:08:56 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 20:00:09 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int	main(int argc, char **argv)
 	if (init_table(argv, table) != 0)
 		return (1);
 	// creating threads
+	pthread_mutex_init(&table->sim_mutex, NULL);
 	if (run_simulation(table) != 0)
 		return (1);
 	// join the threads
@@ -83,5 +84,6 @@ int	main(int argc, char **argv)
 	// Destroy the mutex
 	if (destroy_mutex(table) != 0)
 		return (1);
+	pthread_mutex_destroy(&table->sim_mutex);
 	return (0);
 }

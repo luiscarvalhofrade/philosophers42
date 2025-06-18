@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:08:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 17:08:51 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 20:02:51 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,24 @@ void	eat(t_philo *philo)
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->left_fork->mutex);
+		pthread_mutex_lock(&philo->table->sim_mutex);
+		printf("has taken a fork\n");
+		pthread_mutex_unlock(&philo->table->sim_mutex);
 		pthread_mutex_lock(&philo->right_fork->mutex);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->right_fork->mutex);
+		pthread_mutex_lock(&philo->table->sim_mutex);
+		printf("has taken a fork\n");
+		pthread_mutex_unlock(&philo->table->sim_mutex);
 		pthread_mutex_lock(&philo->left_fork->mutex);
 	}
 	usleep(philo->table->time_eat * 1000);
 	philo->num_meals++;
+	pthread_mutex_lock(&philo->table->sim_mutex);
 	printf("timestamp_in_ms %d is eating\n", philo->id);
+	pthread_mutex_unlock(&philo->table->sim_mutex);
 	pthread_mutex_unlock(&philo->left_fork->mutex);
 	pthread_mutex_unlock(&philo->right_fork->mutex);
 	return ;
