@@ -5,7 +5,10 @@
 
 // the initial balance is 0
 int balance = 0;
+
+// mutex variable
 pthread_mutex_t mutex;
+
 // write the new balance (after as simulated 1/4 second delay)
 void write_balance(int new_balance)
 {
@@ -43,9 +46,6 @@ void* deposit(void *amount)
 
 int main()
 {
-  // mutex variable
-  
-
   // output the balance before the deposits
   int before = read_balance();
   printf("Before: %d\n", before);

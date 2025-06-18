@@ -27,7 +27,7 @@ if we have t philos:
 
 # Dynamic
 
-the first philo gets his forks, automatically the second one is locked, and the third, if we have the a even number of forks, also is allowed to get the third 
+the first philo gets his forks, automatically the second philo is locked, and the third, if we have a even number of forks, also is allowed to get the third 
 and the fourth forks and so on and on.
 
 so here we found a new point: if the total number of philos is even, half of philos eat and the other half dont and if we have a odd number, we have (half - 1)
@@ -42,7 +42,7 @@ other point, we dont have specified the amount of time of thinking, so it is the
 
 # The table
 
-list all the philosophers, defining a unique number for eachone and the same for forks, remmembering that both are in the same number. We also need to set the other informations like all the "times" given by the user and the count of how many meals each one needs to eat at least if this info is given.
+list all the philosophers, defining a unique number for eachone and the same for forks, remmembering that both are the same total number. We also need to set the other informations like all the "times" given by the user and the count of how many meals each one needs to eat at least if this info is given.
 
 # The philo
 
