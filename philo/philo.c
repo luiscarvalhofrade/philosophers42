@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 14:44:27 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:20:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,19 @@ int	init_philos(t_table *table)
 
 int	init_table(char **argv, t_table *table)
 {
-	int		i;
+	int	i;
 
-	i = -1;
+	i = 0;
 	table->num_philos = atoi(argv[1]);
 	//table->start_simulation = gettimeofday();
 	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		return (1);
-	while (++i <= table->num_philos)
+	while (i < table->num_philos)
 	{
 		pthread_mutex_init(&table->forks[i].mutex, NULL);
 		table->forks[i].id = i;
+		i++;
 	}
 	table->philos = (t_philo *)malloc(sizeof(t_philo) * table->num_philos);
 	if (!table->philos)
@@ -54,25 +55,25 @@ int	init_table(char **argv, t_table *table)
 	return (0);
 }
 
-void	*eat(void *table)
+void	*eat(void *philo)
 {
-	t_philo	*philo;
-	t_table *t;
-	int		i;
+	t_philo	*p;
 
-	i = 0;	
-	t = (t_table *)table;
-	while (i < t->num_philos)
+	p = (t_philo *)philo;
+	if (p->id % 2 == 0)
 	{
-		philo = &t->philos[i];
-		pthread_mutex_lock(&philo->left_fork->mutex);
-		pthread_mutex_lock(&philo->right_fork->mutex);
-		philo->num_meals++;
-		printf("eating... %d philo: %d\n", philo->num_meals, philo->id);
-		pthread_mutex_unlock(&philo->left_fork->mutex);
-		pthread_mutex_unlock(&philo->right_fork->mutex);
-		i++;
+		pthread_mutex_lock(&p->left_fork->mutex);
+		pthread_mutex_lock(&p->right_fork->mutex);
 	}
+	else
+	{
+		pthread_mutex_lock(&p->right_fork->mutex);
+		pthread_mutex_lock(&p->left_fork->mutex);
+	}
+	p->num_meals++;
+	printf("eating... %d philo: %d\n", p->num_meals, p->id);
+	pthread_mutex_unlock(&p->left_fork->mutex);
+	pthread_mutex_unlock(&p->right_fork->mutex);
 	return (0);
 }
 
@@ -85,7 +86,7 @@ int	run_simulation(t_table *table)
 	while (i < table->num_philos)
 	{
 		philo = &table->philos[i];
-		pthread_create(&philo->thread, NULL, eat, (void *)table);
+		pthread_create(&philo->thread, NULL, eat, (void *)philo);
 		i++;
 	}
 	return (0);
@@ -131,8 +132,8 @@ int	validate_argv(char **argv)
 		return (1);
 	if (atoi(argv[4]) == 0)
 		return (1);
-	if (atoi(argv[5]) == 0)
-		return (1);
+	// if (atoi(argv[5]) == 0)
+	// 	return (1);
 	return (0);
 }
 
@@ -146,7 +147,11 @@ int	main(int argc, char **argv)
 	// validate if all params are integers
 	if (validate_argv(argv) != 0)
 		return (1);
-	// init table, forks, philos
+	// init table
+	table = malloc(sizeof(t_table));
+	if (!table)
+    	return (1);
+	// init forks, philos
 	if (init_table(argv, table) != 0)
 		return (1);
 	// creating threads
