@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 13:49:13 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 14:09:16 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <sys/time.h>
 
 typedef struct  s_fork
 {
     int             id;
-    pthread_mutex_t fork;
+    pthread_mutex_t mutex;
 }               t_fork;
 
 typedef struct  s_table t_table;
