@@ -6,101 +6,11 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 17:00:42 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:08:56 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	init_philos(t_table *table)
-{
-	int		i;
-	t_philo	*philo;
-
-	i = 0;
-	while (i < table->num_philos)
-	{
-		philo = &table->philos[i];
-		philo->id = i;
-		philo->num_meals = 0;
-		philo->left_fork = &table->forks[i];
-		philo->right_fork = &table->forks[(i + 1) % table->num_philos];
-		philo->table = table;
-		philo->last_meal = table->start_simulation;
-		i++;
-	}
-	return (0);
-}
-
-int	init_table(char **argv, t_table *table)
-{
-	int	i;
-
-	i = 0;
-	table->num_philos = atoi(argv[1]);
-	//table->start_simulation = gettimeofday();
-	table->time_die = atoi(argv[2]);
-	table->time_eat = atoi(argv[3]);
-	table->time_sleep = atoi(argv[4]);
-	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
-	if (!table->forks)
-		return (1);
-	while (i < table->num_philos)
-	{
-		pthread_mutex_init(&table->forks[i].mutex, NULL);
-		table->forks[i].id = i;
-		i++;
-	}
-	table->philos = (t_philo *)malloc(sizeof(t_philo) * table->num_philos);
-	if (!table->philos)
-		return (1);
-	init_philos(table);
-	return (0);
-}
-
-void	eat(t_philo *philo)
-{
-	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_lock(&philo->left_fork->mutex);
-		pthread_mutex_lock(&philo->right_fork->mutex);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->right_fork->mutex);
-		pthread_mutex_lock(&philo->left_fork->mutex);
-	}
-	usleep(philo->table->time_eat * 1000);
-	philo->num_meals++;
-	printf("timestamp_in_ms %d is eating\n", philo->id);
-	pthread_mutex_unlock(&philo->left_fork->mutex);
-	pthread_mutex_unlock(&philo->right_fork->mutex);
-	return ;
-}
-
-void	*routine(void *arg)
-{
-	t_philo	*p;
-
-	p = (t_philo *)arg;
-	eat(p);
-	return (0);
-}
-
-int	run_simulation(t_table *table)
-{
-	t_philo	*philo;
-	int		i;
-
-	i = 0;
-	while (i < table->num_philos)
-	{
-		philo = &table->philos[i];
-		pthread_create(&philo->thread, NULL, routine, (void *)philo);
-		i++;
-	}
-	return (0);
-}
 
 int	destroy_mutex(t_table *table)
 {
