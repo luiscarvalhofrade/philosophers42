@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:07:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 19:58:37 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/24 17:36:28 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 int	init_philos(t_table *table)
 {
-	int		i;
-	t_philo	*philo;
+	int				i;
+	t_philo			*philo;
+	pthread_mutex_t	meal_mutex;
 
 	i = 0;
 	while (i < table->num_philos)
@@ -40,7 +41,7 @@ int	init_table(char **argv, t_table *table)
 	i = 0;
 	table->sim_mutex = mutex;
 	table->num_philos = atoi(argv[1]);
-	//table->start_simulation = gettimeofday();
+	table->start_simulation = get_time();
 	table->time_die = atoi(argv[2]);
 	table->time_eat = atoi(argv[3]);
 	table->time_sleep = atoi(argv[4]);

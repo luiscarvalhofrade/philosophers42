@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 19:58:33 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/24 17:42:56 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,14 @@ typedef struct  s_table t_table;
 
 typedef struct  s_philo
 {
-    int			id;
-    int			num_meals;
-    int			last_meal;
-	pthread_t	thread;
-    t_table		*table;
-    t_fork 		*right_fork;
-    t_fork		*left_fork;
+    int				id;
+    int				num_meals;
+    int				last_meal;
+	pthread_t		thread;
+	pthread_mutex_t	meal_mutex;
+    t_table			*table;
+    t_fork 			*right_fork;
+    t_fork			*left_fork;
 }               t_philo;
 
 typedef struct  s_table
@@ -54,5 +55,7 @@ typedef struct  s_table
 
 int	init_table(char **argv, t_table *table);
 int	run_simulation(t_table *table);
+
+unsigned long	get_time(void);
 
 #endif

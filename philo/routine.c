@@ -6,47 +6,72 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:08:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 20:02:51 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/24 17:46:04 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	eat(t_philo *philo)
+void	forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->left_fork->mutex);
-		pthread_mutex_lock(&philo->table->sim_mutex);
 		printf("has taken a fork\n");
-		pthread_mutex_unlock(&philo->table->sim_mutex);
 		pthread_mutex_lock(&philo->right_fork->mutex);
+		printf("has taken a fork\n");
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->right_fork->mutex);
-		pthread_mutex_lock(&philo->table->sim_mutex);
 		printf("has taken a fork\n");
-		pthread_mutex_unlock(&philo->table->sim_mutex);
 		pthread_mutex_lock(&philo->left_fork->mutex);
+		printf("has taken a fork\n");
 	}
+}
+
+void	eat(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->meal_mutex);
+	philo->last_meal = get_time();
+	pthread_mutex_unlock(&philo->meal_mutex);
 	usleep(philo->table->time_eat * 1000);
+	printf("%lu %d is eating\n", get_time() - philo->last_meal, philo->id);
+	pthread_mutex_lock(&philo->meal_mutex);
 	philo->num_meals++;
-	pthread_mutex_lock(&philo->table->sim_mutex);
-	printf("timestamp_in_ms %d is eating\n", philo->id);
-	pthread_mutex_unlock(&philo->table->sim_mutex);
+	pthread_mutex_unlock(&philo->meal_mutex);
 	pthread_mutex_unlock(&philo->left_fork->mutex);
 	pthread_mutex_unlock(&philo->right_fork->mutex);
-	return ;
 }
+
+void	forks_n_eat(t_philo *philo)
+{
+	forks(philo);
+	eat(philo);
+}
+
+void	sleep_n_think(t_philo *philo)
+{
+	printf("%d is sleeping\n", philo->id);
+	usleep(philo->table->time_sleep * 1000);
+	printf("%d is thinking\n", philo->id);
+}
+
 
 void	*routine(void *arg)
 {
 	t_philo	*p;
 
 	p = (t_philo *)arg;
-	eat(p);
-	return (0);
+	while (1)
+	{
+		// pthread_mutex_lock(&p->table->sim_mutex);
+		// if (is_alive == 0)
+		// 	break ;
+		// pthread_mutex_unlock(&p->table->sim_mutex);
+		forks_n_eat(p);
+		sleep_n_think(p);
+	}
 }
 
 int	run_simulation(t_table *table)
