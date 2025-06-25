@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:08:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/24 17:46:04 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:52:31 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,24 @@ void	forks(t_philo *philo)
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->left_fork->mutex);
-		printf("has taken a fork\n");
+		pthread_mutex_lock(&philo->table->print_mutex);
+		printf("%lu %d has taken a fork\n", get_time(), philo->id);
+		pthread_mutex_unlock(&philo->table->print_mutex);
 		pthread_mutex_lock(&philo->right_fork->mutex);
-		printf("has taken a fork\n");
+		pthread_mutex_lock(&philo->table->print_mutex);
+		printf("%lu %d has taken a fork\n", get_time(), philo->id);
+		pthread_mutex_unlock(&philo->table->print_mutex);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->right_fork->mutex);
-		printf("has taken a fork\n");
+		pthread_mutex_lock(&philo->table->print_mutex);
+		printf("%lu %d has taken a fork\n", get_time(), philo->id);
+		pthread_mutex_unlock(&philo->table->print_mutex);
 		pthread_mutex_lock(&philo->left_fork->mutex);
-		printf("has taken a fork\n");
+		pthread_mutex_lock(&philo->table->print_mutex);
+		printf("%lu %d has taken a fork\n", get_time(), philo->id);
+		pthread_mutex_unlock(&philo->table->print_mutex);
 	}
 }
 
@@ -34,10 +42,10 @@ void	eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal = get_time();
-	pthread_mutex_unlock(&philo->meal_mutex);
+	pthread_mutex_lock(&philo->table->print_mutex);
+	printf("%lu %d is eating\n",  get_time(), philo->id);
+	pthread_mutex_unlock(&philo->table->print_mutex);
 	usleep(philo->table->time_eat * 1000);
-	printf("%lu %d is eating\n", get_time() - philo->last_meal, philo->id);
-	pthread_mutex_lock(&philo->meal_mutex);
 	philo->num_meals++;
 	pthread_mutex_unlock(&philo->meal_mutex);
 	pthread_mutex_unlock(&philo->left_fork->mutex);
@@ -52,9 +60,15 @@ void	forks_n_eat(t_philo *philo)
 
 void	sleep_n_think(t_philo *philo)
 {
-	printf("%d is sleeping\n", philo->id);
+	unsigned long	time;
+
+	pthread_mutex_lock(&philo->table->print_mutex);
+	printf("%lu %d is sleeping\n", get_time(), philo->id);
+	pthread_mutex_unlock(&philo->table->print_mutex);
 	usleep(philo->table->time_sleep * 1000);
-	printf("%d is thinking\n", philo->id);
+	pthread_mutex_lock(&philo->table->print_mutex);
+	printf("%lu %d is thinking\n", get_time(), philo->id);
+	pthread_mutex_unlock(&philo->table->print_mutex);
 }
 
 

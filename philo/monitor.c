@@ -6,9 +6,13 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 17:51:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/24 17:52:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/25 14:12:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+int	monitor(t_table *table)
+{
+	
+}

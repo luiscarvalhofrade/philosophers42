@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/24 17:42:56 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:29:53 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct  s_table
     int         time_sleep;
     int         num_meals;
     int         start_simulation;
+	pthread_mutex_t print_mutex;
     pthread_mutex_t sim_mutex;
     t_philo     *philos;
     t_fork      *forks;

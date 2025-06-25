@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:07:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/24 17:36:28 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:28:17 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,8 @@ int	init_philos(t_table *table)
 int	init_table(char **argv, t_table *table)
 {
 	int	i;
-	pthread_mutex_t	mutex;
 
 	i = 0;
-	table->sim_mutex = mutex;
 	table->num_philos = atoi(argv[1]);
 	table->start_simulation = get_time();
 	table->time_die = atoi(argv[2]);
