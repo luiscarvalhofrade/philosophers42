@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/26 14:43:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:55:34 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ typedef struct  s_philo
 typedef struct  s_table
 {
     int         num_philos;
-    int         time_die;
-    int         time_eat;
-    int         time_sleep;
+    unsigned long   time_die;
+    unsigned long   time_eat;
+    unsigned long   time_sleep;
     int         num_meals;
-	int			sim_end;
+	unsigned long   sim_end;
     unsigned long	start_simulation;
 	pthread_mutex_t print_mutex;
     pthread_mutex_t sim_mutex;

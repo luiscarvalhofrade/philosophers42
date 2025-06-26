@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 17:28:56 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/26 14:43:02 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:55:52 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 unsigned long	ft_time(void)
 {
 	struct timeval	timeval;
-	unsigned long	time;
 
 	gettimeofday(&timeval, NULL);
 	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));

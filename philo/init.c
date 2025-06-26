@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:07:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/26 15:10:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/26 18:22:21 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,12 @@ int	init_philos(t_table *table)
 {
 	int				i;
 	t_philo			*philo;
-	pthread_mutex_t	meal_mutex;
 
 	i = 0;
-	
 	while (i < table->num_philos)
 	{
 		philo = &table->philos[i];
-		philo->id = i;
+		philo->id = i + 1;
 		philo->num_meals = 0;
 		philo->left_fork = &table->forks[i];
 		philo->right_fork = &table->forks[(i + 1) % table->num_philos];
