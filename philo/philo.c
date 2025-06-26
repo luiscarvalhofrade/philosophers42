@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/18 20:00:09 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:47:52 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,18 @@ int	destroy_mutex(t_table *table)
 {
 	int		i;
 	t_fork	*fork;
+	t_philo	*philo;
 
 	i = 0;
 	while (i < table->num_philos)
 	{
 		fork = &table->forks[i];
 		pthread_mutex_destroy(&fork->mutex);
+		philo = &table->philos[i];
+		pthread_mutex_destroy(&philo->meal_mutex);
 		i++;
 	}
+	
 	return (0);
 }
 
@@ -59,29 +63,25 @@ int	validate_argv(char **argv)
 
 int	main(int argc, char **argv)
 {
+	pthread_t monitor_thread;
 	t_table	*table;
 	
-	//validate if we have the right number of params
 	if (argc < 5 || argc > 6)
 		return (1);
-	// validate if all params are integers
 	if (validate_argv(argv) != 0)
 		return (1);
-	// init table
 	table = malloc(sizeof(t_table));
 	if (!table)
     	return (1);
-	// init forks, philos
 	if (init_table(argv, table) != 0)
 		return (1);
-	// creating threads
 	pthread_mutex_init(&table->sim_mutex, NULL);
 	if (run_simulation(table) != 0)
 		return (1);
-	// join the threads
+	pthread_create(&monitor_thread, NULL, (void *)monitor, (void *)table);
 	if (join_threads(table) != 0)
 		return (1);
-	// Destroy the mutex
+	pthread_join(monitor_thread, NULL);
 	if (destroy_mutex(table) != 0)
 		return (1);
 	pthread_mutex_destroy(&table->sim_mutex);

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:08:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/25 17:52:31 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:50:28 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,45 @@
 
 void	forks(t_philo *philo)
 {
+	unsigned long time;
+
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->left_fork->mutex);
 		pthread_mutex_lock(&philo->table->print_mutex);
-		printf("%lu %d has taken a fork\n", get_time(), philo->id);
+		time = ft_time() - philo->table->start_simulation;
+		printf("%lu %d has taken a fork\n", time, philo->id);
 		pthread_mutex_unlock(&philo->table->print_mutex);
 		pthread_mutex_lock(&philo->right_fork->mutex);
 		pthread_mutex_lock(&philo->table->print_mutex);
-		printf("%lu %d has taken a fork\n", get_time(), philo->id);
+		time = ft_time() - philo->table->start_simulation;
+		printf("%lu %d has taken a fork\n", time, philo->id);
 		pthread_mutex_unlock(&philo->table->print_mutex);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->right_fork->mutex);
 		pthread_mutex_lock(&philo->table->print_mutex);
-		printf("%lu %d has taken a fork\n", get_time(), philo->id);
+		time = ft_time() - philo->table->start_simulation;
+		printf("%lu %d has taken a fork\n", time, philo->id);
 		pthread_mutex_unlock(&philo->table->print_mutex);
 		pthread_mutex_lock(&philo->left_fork->mutex);
 		pthread_mutex_lock(&philo->table->print_mutex);
-		printf("%lu %d has taken a fork\n", get_time(), philo->id);
+		time = ft_time() - philo->table->start_simulation;
+		printf("%lu %d has taken a fork\n", time, philo->id);
 		pthread_mutex_unlock(&philo->table->print_mutex);
 	}
 }
 
 void	eat(t_philo *philo)
 {
+	unsigned long time;
+
 	pthread_mutex_lock(&philo->meal_mutex);
-	philo->last_meal = get_time();
+	philo->last_meal = ft_time();
 	pthread_mutex_lock(&philo->table->print_mutex);
-	printf("%lu %d is eating\n",  get_time(), philo->id);
+	time = philo->last_meal - philo->table->start_simulation;
+	printf("%lu %d is eating\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->print_mutex);
 	usleep(philo->table->time_eat * 1000);
 	philo->num_meals++;
@@ -63,11 +72,13 @@ void	sleep_n_think(t_philo *philo)
 	unsigned long	time;
 
 	pthread_mutex_lock(&philo->table->print_mutex);
-	printf("%lu %d is sleeping\n", get_time(), philo->id);
+	time = ft_time() - philo->table->start_simulation;
+	printf("%lu %d is sleeping\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->print_mutex);
 	usleep(philo->table->time_sleep * 1000);
 	pthread_mutex_lock(&philo->table->print_mutex);
-	printf("%lu %d is thinking\n", get_time(), philo->id);
+	time = ft_time() - philo->table->start_simulation;
+	printf("%lu %d is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->table->print_mutex);
 }
 
@@ -79,13 +90,14 @@ void	*routine(void *arg)
 	p = (t_philo *)arg;
 	while (1)
 	{
-		// pthread_mutex_lock(&p->table->sim_mutex);
-		// if (is_alive == 0)
-		// 	break ;
-		// pthread_mutex_unlock(&p->table->sim_mutex);
+		pthread_mutex_lock(&p->table->sim_mutex);
+		if (p->table->sim_end == 1)
+			break ;
+		pthread_mutex_unlock(&p->table->sim_mutex);
 		forks_n_eat(p);
 		sleep_n_think(p);
 	}
+	return (0);
 }
 
 int	run_simulation(t_table *table)
@@ -97,6 +109,7 @@ int	run_simulation(t_table *table)
 	while (i < table->num_philos)
 	{
 		philo = &table->philos[i];
+		philo->last_meal = ft_time();
 		pthread_create(&philo->thread, NULL, routine, (void *)philo);
 		i++;
 	}

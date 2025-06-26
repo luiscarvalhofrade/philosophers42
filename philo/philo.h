@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/25 17:29:53 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:43:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct  s_philo
 {
     int				id;
     int				num_meals;
-    int				last_meal;
+    unsigned long	last_meal;
 	pthread_t		thread;
 	pthread_mutex_t	meal_mutex;
     t_table			*table;
@@ -47,7 +47,8 @@ typedef struct  s_table
     int         time_eat;
     int         time_sleep;
     int         num_meals;
-    int         start_simulation;
+	int			sim_end;
+    unsigned long	start_simulation;
 	pthread_mutex_t print_mutex;
     pthread_mutex_t sim_mutex;
     t_philo     *philos;
@@ -57,6 +58,7 @@ typedef struct  s_table
 int	init_table(char **argv, t_table *table);
 int	run_simulation(t_table *table);
 
-unsigned long	get_time(void);
+unsigned long	ft_time(void);
+int				monitor(t_table *table);
 
 #endif

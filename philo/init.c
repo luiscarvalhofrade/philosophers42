@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:07:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/25 17:28:17 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:10:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	init_philos(t_table *table)
 	pthread_mutex_t	meal_mutex;
 
 	i = 0;
+	
 	while (i < table->num_philos)
 	{
 		philo = &table->philos[i];
@@ -28,6 +29,7 @@ int	init_philos(t_table *table)
 		philo->right_fork = &table->forks[(i + 1) % table->num_philos];
 		philo->table = table;
 		philo->last_meal = table->start_simulation;
+		pthread_mutex_init(&philo->meal_mutex, NULL);
 		i++;
 	}
 	return (0);
@@ -39,10 +41,11 @@ int	init_table(char **argv, t_table *table)
 
 	i = 0;
 	table->num_philos = atoi(argv[1]);
-	table->start_simulation = get_time();
+	table->start_simulation = ft_time();
 	table->time_die = atoi(argv[2]);
 	table->time_eat = atoi(argv[3]);
 	table->time_sleep = atoi(argv[4]);
+	table->sim_end = 0;
 	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		return (1);
