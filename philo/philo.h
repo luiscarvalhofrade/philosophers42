@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/26 17:55:34 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:55:18 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	init_table(char **argv, t_table *table);
 int	run_simulation(t_table *table);
 
 unsigned long	ft_time(void);
-int				monitor(t_table *table);
+void	*monitor(void *arg);
+void	free_and_exit(t_table *table);
+int	is_digit_string(char *str);
 
 #endif

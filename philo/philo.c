@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/26 14:47:52 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:56:11 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	destroy_mutex(t_table *table)
 		pthread_mutex_destroy(&philo->meal_mutex);
 		i++;
 	}
-	
+	pthread_mutex_destroy(&table->print_mutex);
 	return (0);
 }
 
@@ -48,16 +48,15 @@ int	join_threads(t_table *table)
 
 int	validate_argv(char **argv)
 {
-	if (atoi(argv[1]) == 0)
-		return (1);
-	if (atoi(argv[2]) == 0)
-		return (1);
-	if (atoi(argv[3]) == 0)
-		return (1);
-	if (atoi(argv[4]) == 0)
-		return (1);
-	// if (atoi(argv[5]) == 0)
-	// 	return (1);
+	int	i;
+
+	i = 1;
+	while (argv[i])
+	{
+		if (!is_digit_string(argv[i]) || atoi(argv[i]) <= 0)
+			return (1);
+		i++;
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:08:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/26 14:50:28 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:14:53 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,10 @@ void	*routine(void *arg)
 	{
 		pthread_mutex_lock(&p->table->sim_mutex);
 		if (p->table->sim_end == 1)
+		{
+			pthread_mutex_unlock(&p->table->sim_mutex);
 			break ;
+		}
 		pthread_mutex_unlock(&p->table->sim_mutex);
 		forks_n_eat(p);
 		sleep_n_think(p);
@@ -106,11 +109,13 @@ int	run_simulation(t_table *table)
 	int		i;
 
 	i = 0;
+	table->start_simulation = ft_time();
 	while (i < table->num_philos)
 	{
 		philo = &table->philos[i];
 		philo->last_meal = ft_time();
-		pthread_create(&philo->thread, NULL, routine, (void *)philo);
+		if (pthread_create(&philo->thread, NULL, routine, (void *)philo) != 0)
+			break ;
 		i++;
 	}
 	return (0);

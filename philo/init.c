@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:07:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/26 18:22:21 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:18:35 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	init_table(char **argv, t_table *table)
 
 	i = 0;
 	table->num_philos = atoi(argv[1]);
-	table->start_simulation = ft_time();
 	table->time_die = atoi(argv[2]);
 	table->time_eat = atoi(argv[3]);
 	table->time_sleep = atoi(argv[4]);
@@ -47,6 +46,7 @@ int	init_table(char **argv, t_table *table)
 	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		return (1);
+	pthread_mutex_init(&table->print_mutex, NULL);
 	while (i < table->num_philos)
 	{
 		pthread_mutex_init(&table->forks[i].mutex, NULL);
