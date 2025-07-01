@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/30 17:55:18 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 13:50:49 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct  s_table
     t_fork      *forks;
 }               t_table;
 
-int	init_table(char **argv, t_table *table);
+int	init_table(int argc, char **argv, t_table *table);
 int	run_simulation(t_table *table);
 
 unsigned long	ft_time(void);

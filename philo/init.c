@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:07:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/30 17:18:35 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 13:50:26 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	init_philos(t_table *table)
 	return (0);
 }
 
-int	init_table(char **argv, t_table *table)
+int	init_table(int argc, char **argv, t_table *table)
 {
 	int	i;
 
@@ -42,6 +42,10 @@ int	init_table(char **argv, t_table *table)
 	table->time_die = atoi(argv[2]);
 	table->time_eat = atoi(argv[3]);
 	table->time_sleep = atoi(argv[4]);
+	if (argc == 6)
+		table->num_meals = atoi(argv[5]);
+	else
+		table->num_meals = 0;
 	table->sim_end = 0;
 	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)

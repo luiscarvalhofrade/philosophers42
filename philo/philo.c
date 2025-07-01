@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:02 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/30 17:56:11 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 13:50:39 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	main(int argc, char **argv)
 	table = malloc(sizeof(t_table));
 	if (!table)
     	return (1);
-	if (init_table(argv, table) != 0)
+	if (init_table(argc, argv, table) != 0)
 		return (1);
 	pthread_mutex_init(&table->sim_mutex, NULL);
 	if (run_simulation(table) != 0)
