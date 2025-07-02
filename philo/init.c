@@ -6,60 +6,82 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:07:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/01 13:50:26 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 21:46:48 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init_philos(t_table *table)
+#include "philo.h"
+
+int	init_simulation(int argc, char **argv, t_sim *sim)
 {
-	int				i;
-	t_philo			*philo;
+	sim->num_philos = ft_atoi(argv[1]);
+	sim->time_to_die = ft_atoi(argv[2]);
+	sim->time_to_eat = ft_atoi(argv[3]);
+	sim->time_to_sleep = ft_atoi(argv[4]);
+	if (argc == 6)
+		sim->meals_required = ft_atoi(argv[5]);
+	else
+		sim->meals_required = -1;
+	sim->sim_ended = 0;
+	sim->forks = malloc(sizeof(t_fork) * sim->num_philos);
+	if (!sim->forks)
+		return (1);
+	sim->philos = malloc(sizeof(t_philo) * sim->num_philos);
+	if (!sim->philos)
+	{
+		free(sim->forks);
+		return (1);
+	}
+	return (0);
+}
+
+int	init_philo(t_sim *sim)
+{
+	int	i;
 
 	i = 0;
-	while (i < table->num_philos)
+	while (i < sim->num_philos)
 	{
-		philo = &table->philos[i];
-		philo->id = i + 1;
-		philo->num_meals = 0;
-		philo->left_fork = &table->forks[i];
-		philo->right_fork = &table->forks[(i + 1) % table->num_philos];
-		philo->table = table;
-		philo->last_meal = table->start_simulation;
-		pthread_mutex_init(&philo->meal_mutex, NULL);
+		sim->philos[i].id = i + 1;
+		sim->philos[i].meals_eaten = 0;
+		sim->philos[i].left_fork = &sim->forks[i];
+		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->num_philos];
+		sim->philos[i].sim = sim;
 		i++;
 	}
 	return (0);
 }
 
-int	init_table(int argc, char **argv, t_table *table)
+int	init_mutex(t_sim *sim)
 {
 	int	i;
 
 	i = 0;
-	table->num_philos = atoi(argv[1]);
-	table->time_die = atoi(argv[2]);
-	table->time_eat = atoi(argv[3]);
-	table->time_sleep = atoi(argv[4]);
-	if (argc == 6)
-		table->num_meals = atoi(argv[5]);
-	else
-		table->num_meals = 0;
-	table->sim_end = 0;
-	table->forks = (t_fork *)malloc(sizeof(t_fork) * table->num_philos);
-	if (!table->forks)
-		return (1);
-	pthread_mutex_init(&table->print_mutex, NULL);
-	while (i < table->num_philos)
+	while (i < sim->num_philos)
 	{
-		pthread_mutex_init(&table->forks[i].mutex, NULL);
-		table->forks[i].id = i;
+		if (pthread_mutex_init(&sim->forks[i].mutex, NULL) != 0)
+			return (1);
+		sim->forks[i].id = i;
 		i++;
 	}
-	table->philos = (t_philo *)malloc(sizeof(t_philo) * table->num_philos);
-	if (!table->philos)
+	if (pthread_mutex_init(&sim->write_mutex, NULL) != 0)
 		return (1);
-	init_philos(table);
+	if (pthread_mutex_init(&sim->death_mutex, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&sim->meal_mutex, NULL) != 0)
+		return (1);
+	return (0);
+}
+
+int	init_all(int argc, char **argv, t_sim *sim)
+{
+	if (init_simulation(argc, argv, sim) != 0)
+		return (1);
+	if (init_philo(sim) != 0)
+		return (1);
+	if (init_mutex(sim) != 0)
+		return (1);
 	return (0);
 }

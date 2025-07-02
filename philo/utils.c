@@ -6,41 +6,73 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 17:28:56 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/06/30 18:02:44 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 21:48:09 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-unsigned long	ft_time(void)
+long long	get_time(void)
 {
-	struct timeval	timeval;
+	struct timeval	tv;
 
-	gettimeofday(&timeval, NULL);
-	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	free_and_exit(t_table *table)
+void	precise_sleep(int ms)
 {
-	free(table->forks);
-	free(table->philos);
-	free(table);
+	long long	start;
+
+	start = get_time();
+	while (get_time() - start < ms)
+		usleep(100);
 }
 
-int	ft_isdigit(char c)
+void	safe_print(char *msg, t_philo *philo)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	else
-		return (0);
-}
+	long long	time;
 
-int	is_digit_string(char *str)
-{
-	while (*str)
+	pthread_mutex_lock(&philo->sim->death_mutex);
+	if (philo->sim->sim_ended)
 	{
-		if (!ft_isdigit(*str++))
+		pthread_mutex_unlock(&philo->sim->death_mutex);
+		return ;
+	}
+	pthread_mutex_unlock(&philo->sim->death_mutex);
+	time = get_time() - philo->sim->start_time;
+	pthread_mutex_lock(&philo->sim->write_mutex);
+	printf("%lld %d %s\n", time, philo->id, msg);
+	pthread_mutex_unlock(&philo->sim->write_mutex);
+}
+
+int	ft_atoi(char *str)
+{
+	int	result;
+	int	i;
+
+	result = 0;
+	i = 0;
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result);
+}
+
+int	is_valid_number(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
 			return (0);
+		i++;
 	}
 	return (1);
 }

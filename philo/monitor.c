@@ -6,55 +6,83 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 17:51:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/01 16:59:38 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 21:47:25 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*monitor(void *arg)
+int	check_death(t_sim *sim, int i)
 {
-    int i;
-	int	num_philos;
-	t_table	*table;
-	unsigned long current_time;
-	unsigned long last_meal_time;
-    
-	table = (t_table *)arg;
-	num_philos = 0;
-    while (1)
-    {
-        i = 0;
-        while (i < table->num_philos)
-        {
-            pthread_mutex_lock(&table->philos[i].meal_mutex);
-            last_meal_time = table->philos[i].last_meal;
-            pthread_mutex_unlock(&table->philos[i].meal_mutex);
-            current_time = ft_time();
-			if (table->philos[i].num_meals == table->num_meals)
-			{
-				num_philos++;
-				printf("***************** %d objective number of meals did: %d\n", num_philos, table->philos[i].id);
-			}
-			if (num_philos == table->num_philos)
-			{
-				pthread_mutex_lock(&table->sim_mutex);
-                table->sim_end = 1;
-                pthread_mutex_unlock(&table->sim_mutex);
-				free_and_exit(table);
-                exit (0);
-			}
-            if (table->time_die < (current_time - last_meal_time))
-            {
-                pthread_mutex_lock(&table->sim_mutex);
-                table->sim_end = 1;
-                pthread_mutex_unlock(&table->sim_mutex);
-                printf("%lu %d died\n", current_time - table->start_simulation, table->philos[i].id);
-				free_and_exit(table);
-                exit (0);
-            }
-            usleep(1000);
-            i++;
-        }
-    }
+	long long	current_time;
+	long long	last_meal_time;
+
+	pthread_mutex_lock(&sim->meal_mutex);
+	last_meal_time = sim->philos[i].last_meal_time;
+	pthread_mutex_unlock(&sim->meal_mutex);
+	current_time = get_time();
+	if (current_time - last_meal_time > sim->time_to_die)
+	{
+		end_simulation(sim);
+		pthread_mutex_lock(&sim->write_mutex);
+		printf("%lld %d died\n", current_time - sim->start_time,
+			sim->philos[i].id);
+		pthread_mutex_unlock(&sim->write_mutex);
+		return (1);
+	}
+	return (0);
+}
+
+int	check_meals_complete(t_sim *sim)
+{
+	int	i;
+	int	all_ate_enough;
+
+	if (sim->meals_required == -1)
+		return (0);
+	all_ate_enough = 1;
+	i = 0;
+	while (i < sim->num_philos)
+	{
+		if (sim->philos[i].meals_eaten < sim->meals_required)
+		{
+			all_ate_enough = 0;
+			break ;
+		}
+		i++;
+	}
+	if (all_ate_enough)
+	{
+		end_simulation(sim);
+		return (1);
+	}
+	return (0);
+}
+
+void	end_simulation(t_sim *sim)
+{
+	pthread_mutex_lock(&sim->death_mutex);
+	sim->sim_ended = 1;
+	pthread_mutex_unlock(&sim->death_mutex);
+}
+
+void	*monitor_routine(void *arg)
+{
+	t_sim	*sim;
+	int		i;
+
+	sim = (t_sim *)arg;
+	while (1)
+	{
+		i = 0;
+		while (i < sim->num_philos)
+		{
+			if (check_death(sim, i))
+				return (NULL);
+			i++;
+		}
+		if (check_meals_complete(sim))
+			return (NULL);
+		usleep(1000);
+	}
 }

@@ -13,6 +13,7 @@ SRC = 	init.c \
 		monitor.c \
 		routine.c \
 		utils.c \
+		cleanup.c \
 
 # objects
 OBJ = 	 $(SRC:.c=.o)
