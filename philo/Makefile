@@ -13,7 +13,7 @@ SRC = 	init.c \
 		monitor.c \
 		routine.c \
 		utils.c \
-		cleanup.c \
+		threads.c \
 
 # objects
 OBJ = 	 $(SRC:.c=.o)

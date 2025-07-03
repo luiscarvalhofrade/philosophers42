@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup.c                                          :+:      :+:    :+:   */
+/*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 21:47:57 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/01 21:50:41 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:35:44 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,34 @@ void	cleanup_simulation(t_sim *sim)
 	free(sim);
 }
 
+static int	start_thread(t_sim *sim)
+{
+	int		i;
+	t_philo	*solo_philo;
+
+	i = 0;
+	if (sim->meals_required == 0)
+		return (1);
+	else if (sim->num_philos == 1)
+	{
+		solo_philo = &sim->philos[0];
+		if (pthread_create(&solo_philo->thread, NULL,
+			one_philo, solo_philo) != 0)
+			return (1);
+	}
+	else
+	{
+		while (i < sim->num_philos)
+		{
+			if (pthread_create(&sim->philos[i].thread, NULL,
+					philo_routine, (void *)&sim->philos[i]) != 0)
+				return (1);
+			i++;
+		}
+	}
+	return (0);
+}
+
 static int	create_threads(t_sim *sim, pthread_t *monitor)
 {
 	int	i;
@@ -44,13 +72,8 @@ static int	create_threads(t_sim *sim, pthread_t *monitor)
 	if (pthread_create(monitor, NULL, monitor_routine, (void *)sim) != 0)
 		return (1);
 	i = 0;
-	while (i < sim->num_philos)
-	{
-		if (pthread_create(&sim->philos[i].thread, NULL,
-				philo_routine, (void *)&sim->philos[i]) != 0)
-			return (1);
-		i++;
-	}
+	if (start_thread(sim) != 0)
+		return (1);
 	return (0);
 }
 

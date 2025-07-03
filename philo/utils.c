@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 17:28:56 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/01 21:48:09 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:30:42 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ long long	get_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	precise_sleep(int ms)
+void	precise_time(int ms)
 {
 	long long	start;
 

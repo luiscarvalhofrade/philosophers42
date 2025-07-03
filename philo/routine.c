@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:08:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/01 21:47:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:42:37 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	eat_routine(t_philo *philo)
 	philo->last_meal_time = get_time();
 	pthread_mutex_unlock(&philo->sim->meal_mutex);
 	safe_print("is eating", philo);
-	precise_sleep(philo->sim->time_to_eat);
+	precise_time(philo->sim->time_to_eat);
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->left_fork->mutex);
 	pthread_mutex_unlock(&philo->right_fork->mutex);
@@ -45,8 +45,20 @@ void	eat_routine(t_philo *philo)
 void	sleep_and_think(t_philo *philo)
 {
 	safe_print("is sleeping", philo);
-	precise_sleep(philo->sim->time_to_sleep);
+	precise_time(philo->sim->time_to_sleep);
 	safe_print("is thinking", philo);
+}
+
+void	*one_philo(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	pthread_mutex_lock(&philo->left_fork->mutex);
+	safe_print("has taken a fork", philo);
+	precise_time(philo->sim->time_to_die);
+	pthread_mutex_unlock(&philo->left_fork->mutex);
+	return (NULL);
 }
 
 void	*philo_routine(void *arg)

@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 00:13:06 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/01 21:46:05 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:32:39 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void		take_forks(t_philo *philo);
 void		eat_routine(t_philo *philo);
 void		sleep_and_think(t_philo *philo);
 void		*philo_routine(void *arg);
+void		*one_philo(void *arg);
 
 /* monitor.c */
 void		*monitor_routine(void *arg);
@@ -76,12 +77,12 @@ void		end_simulation(t_sim *sim);
 
 /* utils.c */
 long long	get_time(void);
-void		precise_sleep(int ms);
+void		precise_time(int ms);
 void		safe_print(char *msg, t_philo *philo);
 int			ft_atoi(char *str);
 int			is_valid_number(char *str);
 
-/* cleanup.c */
+/* threads.c */
 void		cleanup_simulation(t_sim *sim);
 int			run_simulation(t_sim *sim);
 
