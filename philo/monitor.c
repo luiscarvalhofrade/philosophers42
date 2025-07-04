@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 17:51:49 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/01 21:47:25 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:39:02 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,14 @@ int	check_meals_complete(t_sim *sim)
 	i = 0;
 	while (i < sim->num_philos)
 	{
+		pthread_mutex_lock(&sim->meal_mutex);
 		if (sim->philos[i].meals_eaten < sim->meals_required)
 		{
 			all_ate_enough = 0;
+			pthread_mutex_unlock(&sim->meal_mutex);
 			break ;
 		}
+		pthread_mutex_unlock(&sim->meal_mutex);
 		i++;
 	}
 	if (all_ate_enough)

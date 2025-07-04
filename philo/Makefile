@@ -2,7 +2,7 @@
 CC = cc
 
 # flags and header
-CFLAGS = -Werror -Wall -Wextra -I .
+CFLAGS = -Werror -Wall -Wextra
 
 # program name
 NAME =	philo

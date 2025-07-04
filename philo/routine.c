@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:08:23 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/03 17:42:37 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:35:55 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ void	eat_routine(t_philo *philo)
 	pthread_mutex_unlock(&philo->sim->meal_mutex);
 	safe_print("is eating", philo);
 	precise_time(philo->sim->time_to_eat);
+	pthread_mutex_lock(&philo->sim->meal_mutex);
 	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->sim->meal_mutex);
 	pthread_mutex_unlock(&philo->left_fork->mutex);
 	pthread_mutex_unlock(&philo->right_fork->mutex);
 }
