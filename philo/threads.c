@@ -6,7 +6,7 @@
 /*   By: luide-ca <luide-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 21:47:57 by luide-ca          #+#    #+#             */
-/*   Updated: 2025/07/03 17:35:44 by luide-ca         ###   ########.fr       */
+/*   Updated: 2025/07/10 14:12:37 by luide-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	start_thread(t_sim *sim)
 	{
 		solo_philo = &sim->philos[0];
 		if (pthread_create(&solo_philo->thread, NULL,
-			one_philo, solo_philo) != 0)
+				one_philo, solo_philo) != 0)
 			return (1);
 	}
 	else
